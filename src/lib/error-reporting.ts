@@ -1,22 +1,26 @@
-type LovableErrorOptions = {
+// Generic runtime error reporting for the CAIRN Talent Intelligence application.
+// Forwards React error boundary catches to the window reporting hook when present
+// (e.g. during editor preview sessions), so errors aren't silently swallowed.
+
+type ErrorReportOptions = {
   mechanism?: "manual" | "onerror" | "unhandledrejection" | "react_error_boundary";
   handled?: boolean;
   severity?: "error" | "warning" | "info";
 };
 
-type LovableEvents = {
+type ErrorEvents = {
   track?: (event: string, properties?: Record<string, unknown>) => string | null;
   captureException?: (
     error: unknown,
     context?: Record<string, unknown>,
-    options?: LovableErrorOptions,
+    options?: ErrorReportOptions,
   ) => void;
 };
 
 declare global {
   interface Window {
-    __lovableEvents?: LovableEvents;
-    __lovableReportRuntimeError?: (payload: {
+    __cairnErrorEvents?: ErrorEvents;
+    __cairnReportRuntimeError?: (payload: {
       message: string;
       stack?: string;
       filename?: string;
@@ -24,9 +28,10 @@ declare global {
   }
 }
 
-export function reportLovableError(error: unknown, context: Record<string, unknown> = {}) {
+export function reportError(error: unknown, context: Record<string, unknown> = {}) {
   if (typeof window === "undefined") return;
-  window.__lovableEvents?.captureException?.(
+
+  window.__cairnErrorEvents?.captureException?.(
     error,
     {
       source: "react_error_boundary",
@@ -39,11 +44,11 @@ export function reportLovableError(error: unknown, context: Record<string, unkno
       severity: "error",
     },
   );
-  // Prod React does not rethrow boundary-caught errors to window.onerror, so the
-  // editor's telemetry never sees them. Forward to lovable.js's reporting hook,
-  // which is present only inside the editor preview.
+
+  // Prod React does not rethrow boundary-caught errors to window.onerror,
+  // so forward to the runtime reporting hook if one is present.
   const stack = error instanceof Error ? error.stack : undefined;
-  window.__lovableReportRuntimeError?.({
+  window.__cairnReportRuntimeError?.({
     message: describeThrown(error),
     ...(stack !== undefined && { stack }),
     filename: window.location.pathname,
@@ -52,7 +57,7 @@ export function reportLovableError(error: unknown, context: Record<string, unkno
 
 const MAX_SERIALIZED_LENGTH = 2000;
 
-// Loaders and server fns throw raw Responses and plain objects (a Supabase
+// Loaders and server fns throw raw Responses and plain objects (e.g. Supabase
 // `{ message, code, details }`), which String() reduces to "[object ...]".
 function describeThrown(error: unknown): string {
   if (error instanceof Response) {

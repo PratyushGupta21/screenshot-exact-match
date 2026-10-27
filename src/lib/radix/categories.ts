@@ -1,7 +1,7 @@
 import type { CategoryCode } from "./types";
 
-/** Single source of truth for the 12 RADIX skill categories. */
-export const RADIX_CATEGORIES: { code: CategoryCode; name: string }[] = [
+/** Single source of truth for the 12 CAIRN skill categories. */
+export const CAIRN_CATEGORIES: { code: CategoryCode; name: string }[] = [
   { code: "COD", name: "Coding" },
   { code: "DSA", name: "Data Structures & Algorithms" },
   { code: "OOD", name: "Object-Oriented Design" },
@@ -16,8 +16,11 @@ export const RADIX_CATEGORIES: { code: CategoryCode; name: string }[] = [
   { code: "OS", name: "Operating Systems" },
 ];
 
+/** Backward-compatible alias for existing imports */
+export const RADIX_CATEGORIES = CAIRN_CATEGORIES;
+
 export const categoryName = (code: string) =>
-  RADIX_CATEGORIES.find((c) => c.code === code)?.name ?? code;
+  CAIRN_CATEGORIES.find((c) => c.code === code)?.name ?? code;
 
 export const COMPANIES = [
   "Google LLC",

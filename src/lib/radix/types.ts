@@ -1,10 +1,9 @@
-// Shared RADIX data contracts. Keep in sync with the Python modules' JSON output.
+// Shared CAIRN data contracts. Keep in sync with the Python modules' JSON output.
 
 export type Confidence = "high" | "medium" | "low";
 
 export type CategoryCode =
-  | "COD" | "DSA" | "OOD" | "APTI" | "COMM" | "AI"
-  | "CLOUD" | "SQL" | "SWE" | "SYSD" | "NETW" | "OS";
+  "COD" | "DSA" | "OOD" | "APTI" | "COMM" | "AI" | "CLOUD" | "SQL" | "SWE" | "SYSD" | "NETW" | "OS";
 
 export interface Skill {
   skill_name: string;
@@ -78,6 +77,8 @@ export interface HistoryRecord {
   company: string;
   role: string;
   candidate: string;
+  candidateId?: string | undefined;
+  jobId?: string | undefined;
   date: string;
   score: number | null;
   status: "completed" | "failed" | "processing";

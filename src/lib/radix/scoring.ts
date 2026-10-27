@@ -1,8 +1,6 @@
 // Demo scoring logic. Replace with backend results once the Python modules are wired up.
 import { RADIX_CATEGORIES } from "./categories";
-import type {
-  CategoryCode, SkillGap, SkillMatchingResult, TalentCheckResult,
-} from "./types";
+import type { CategoryCode, SkillGap, SkillMatchingResult, TalentCheckResult } from "./types";
 
 export type LevelMap = Record<CategoryCode, number>;
 
@@ -11,7 +9,9 @@ export type LevelMap = Record<CategoryCode, number>;
  * A category with no gap contributes 100%.
  */
 export function computeTalentCheck(
-  company: string, required: LevelMap, candidate: LevelMap,
+  company: string,
+  required: LevelMap,
+  candidate: LevelMap,
 ): TalentCheckResult {
   const skillset_gap: SkillGap[] = RADIX_CATEGORIES.map(({ code }) => ({
     category_code: code,
@@ -39,7 +39,9 @@ const norm = (s: string) => s.trim().toLowerCase();
 
 /** Match score = matched required skills / total required skills. */
 export function computeSkillMatch(
-  jdSourceFile: string, requiredSkills: string[], candidateSkills: string[],
+  jdSourceFile: string,
+  requiredSkills: string[],
+  candidateSkills: string[],
 ): SkillMatchingResult {
   const have = new Set(candidateSkills.map(norm));
   const matched_skills = requiredSkills.filter((s) => have.has(norm(s)));
@@ -51,13 +53,26 @@ export function computeSkillMatch(
 }
 
 export function profileCompletion(p: {
-  name: string; email: string; education: string; skills: unknown[];
-  hackathons: string[]; internships: string[]; certifications: string[];
-  preferred_roles: string[]; cv_file: string;
+  name: string;
+  email: string;
+  education: string;
+  skills: unknown[];
+  hackathons: string[];
+  internships: string[];
+  certifications: string[];
+  preferred_roles: string[];
+  cv_file: string;
 }) {
   const checks = [
-    !!p.name, !!p.email, !!p.education, p.skills.length > 0, p.hackathons.length > 0,
-    p.internships.length > 0, p.certifications.length > 0, p.preferred_roles.length > 0, !!p.cv_file,
+    !!p.name,
+    !!p.email,
+    !!p.education,
+    p.skills.length > 0,
+    p.hackathons.length > 0,
+    p.internships.length > 0,
+    p.certifications.length > 0,
+    p.preferred_roles.length > 0,
+    !!p.cv_file,
   ];
   return Math.round((checks.filter(Boolean).length / checks.length) * 100);
 }

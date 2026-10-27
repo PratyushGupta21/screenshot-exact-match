@@ -1,26 +1,64 @@
-// Integration layer. Every function currently resolves mock data after a short delay.
-// To connect the backend, replace each body with a fetch to your REST endpoint —
-// the UI only depends on these signatures and the shared types.
+// Integration layer & client service facade.
+// In demo mode, processes requests with shared local stores and deterministic scoring.
+// To connect the Python backend, replace bodies with fetch calls to REST endpoints.
 import { computeSkillMatch, computeTalentCheck } from "@/lib/radix/scoring";
 import type {
-  ExtractedSkillList, HistoryRecord, ParsedResume, SkillMatchingResult, TalentCheckResult,
+  ExtractedSkillList,
+  HistoryRecord,
+  ParsedResume,
+  SkillMatchingResult,
+  TalentCheckResult,
 } from "@/lib/radix/types";
 import {
-  SAMPLE_CANDIDATES, SAMPLE_COMPANY_REQUIREMENTS, SAMPLE_HISTORY_BASE, SAMPLE_JD_EXTRACTION,
-  SAMPLE_JOBS, SAMPLE_PARSED_RESUME,
+  SAMPLE_CANDIDATES,
+  SAMPLE_COMPANY_REQUIREMENTS,
+  SAMPLE_JD_EXTRACTION,
+  SAMPLE_PARSED_RESUME,
+  type DemoCandidate,
 } from "@/mocks/data";
+import { loadHistory, addHistoryRecord } from "./history-store";
+import { loadSavedJobs, getJobById } from "./jd-store";
+import { getActiveCandidate } from "./profile-store";
 
-const delay = (ms = 1200) => new Promise((r) => setTimeout(r, ms));
+const delay = (ms = 900) => new Promise((r) => setTimeout(r, ms));
 
-export const getCandidates = () => SAMPLE_CANDIDATES;
-export const getJobs = () => SAMPLE_JOBS;
-export const getCandidate = (id: string) => SAMPLE_CANDIDATES.find((c) => c.id === id)!;
-export const getJob = (id: string) => SAMPLE_JOBS.find((j) => j.id === id)!;
+export function getCandidates(): DemoCandidate[] {
+  const active = getActiveCandidate();
+  // Name label clarifies that this is the candidate's active profile
+  const myCandidate: DemoCandidate = {
+    ...active,
+    profile: {
+      ...active.profile,
+      name: active.profile.name ? `${active.profile.name} (Active Profile)` : "My Profile (Active)",
+    },
+  };
+  return [myCandidate, ...SAMPLE_CANDIDATES];
+}
+
+export function getCandidate(id: string): DemoCandidate {
+  if (id === "my-profile") {
+    return getActiveCandidate();
+  }
+  const found = SAMPLE_CANDIDATES.find((c) => c.id === id);
+  return found ?? getActiveCandidate();
+}
+
+export function getJobs() {
+  return loadSavedJobs();
+}
+
+export function getJob(id: string) {
+  const found = getJobById(id);
+  if (found) return found;
+  const all = loadSavedJobs();
+  return all[0]!;
+}
 
 export async function analyzeJobDescription(
-  file: File, meta: { company: string; role: string },
+  file: File | { name: string },
+  meta: { company: string; role: string },
 ): Promise<ExtractedSkillList> {
-  await delay();
+  await delay(1000);
   return {
     ...SAMPLE_JD_EXTRACTION,
     source_file: file.name,
@@ -29,37 +67,78 @@ export async function analyzeJobDescription(
   };
 }
 
-export async function parseResume(file: File): Promise<ParsedResume> {
-  await delay();
-  return { ...SAMPLE_PARSED_RESUME, extracted: { ...SAMPLE_PARSED_RESUME.extracted, source_file: file.name } };
+export async function parseResume(file: File | { name: string }): Promise<ParsedResume> {
+  await delay(1000);
+  return {
+    ...SAMPLE_PARSED_RESUME,
+    extracted: {
+      ...SAMPLE_PARSED_RESUME.extracted,
+      source_file: file.name,
+    },
+  };
 }
 
-/** Synchronous demo calculation (used by history + dashboard to stay consistent). */
+/** Synchronous calculation (used by dashboard + history to stay consistent). */
 export function talentCheckSync(candidateId: string, company: string): TalentCheckResult {
-  return computeTalentCheck(company, SAMPLE_COMPANY_REQUIREMENTS[company]!, getCandidate(candidateId).levels);
+  const requirements =
+    SAMPLE_COMPANY_REQUIREMENTS[company] ?? SAMPLE_COMPANY_REQUIREMENTS["Google LLC"]!;
+  const cand = getCandidate(candidateId);
+  return computeTalentCheck(company, requirements, cand.levels);
 }
 
 export function skillMatchSync(candidateId: string, jobId: string): SkillMatchingResult {
   const job = getJob(jobId);
-  return computeSkillMatch(
-    job.source_file, job.required_skills, getCandidate(candidateId).profile.skills.map((s) => s.skill_name),
-  );
+  const cand = getCandidate(candidateId);
+  const candidateSkills = cand.profile.skills.map((s) => s.skill_name);
+  return computeSkillMatch(job.source_file, job.required_skills, candidateSkills);
 }
 
-export async function runTalentCheck(candidateId: string, company: string) {
-  await delay(900);
-  return talentCheckSync(candidateId, company);
+export async function runTalentCheck(
+  candidateId: string,
+  company: string,
+): Promise<TalentCheckResult> {
+  await delay(800);
+  const result = talentCheckSync(candidateId, company);
+  const cand = getCandidate(candidateId);
+
+  // Automatically record this run to persistent history
+  addHistoryRecord({
+    type: "talent_check",
+    company,
+    role: "Company-wide 12-category check",
+    candidate: cand.profile.name,
+    candidateId,
+    score: result.readiness_score,
+    status: "completed",
+  });
+
+  return result;
 }
 
-export async function runSkillMatching(candidateId: string, jobId: string) {
-  await delay(900);
-  return skillMatchSync(candidateId, jobId);
+export async function runSkillMatching(
+  candidateId: string,
+  jobId: string,
+): Promise<SkillMatchingResult> {
+  await delay(800);
+  const result = skillMatchSync(candidateId, jobId);
+  const cand = getCandidate(candidateId);
+  const job = getJob(jobId);
+
+  // Automatically record this run to persistent history
+  addHistoryRecord({
+    type: "skill_matching",
+    company: job.company,
+    role: job.role,
+    candidate: cand.profile.name,
+    candidateId,
+    jobId,
+    score: result.match_score,
+    status: "completed",
+  });
+
+  return result;
 }
 
 export function getHistory(): HistoryRecord[] {
-  return SAMPLE_HISTORY_BASE.map((h) => {
-    if (h.status !== "completed") return { ...h, score: null, role: h.type === "skill_matching" ? getJob(h.role).role : h.role };
-    if (h.type === "talent_check") return { ...h, score: talentCheckSync(h.candidate, h.company).readiness_score };
-    return { ...h, role: getJob(h.role).role, score: skillMatchSync(h.candidate, h.role).match_score };
-  });
+  return loadHistory();
 }
