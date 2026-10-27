@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as HistoryRouteImport } from './routes/history'
+import { Route as JdAnalyticsRouteImport } from './routes/jd-analytics'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ResumeParsingRouteImport } from './routes/resume-parsing'
+import { Route as SkillMatchingRouteImport } from './routes/skill-matching'
+import { Route as TalentCheckRouteImport } from './routes/talent-check'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JdAnalyticsRoute = JdAnalyticsRouteImport.update({
+  id: '/jd-analytics',
+  path: '/jd-analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResumeParsingRoute = ResumeParsingRouteImport.update({
+  id: '/resume-parsing',
+  path: '/resume-parsing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SkillMatchingRoute = SkillMatchingRouteImport.update({
+  id: '/skill-matching',
+  path: '/skill-matching',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TalentCheckRoute = TalentCheckRouteImport.update({
+  id: '/talent-check',
+  path: '/talent-check',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/history': typeof HistoryRoute
+  '/jd-analytics': typeof JdAnalyticsRoute
+  '/profile': typeof ProfileRoute
+  '/resume-parsing': typeof ResumeParsingRoute
+  '/skill-matching': typeof SkillMatchingRoute
+  '/talent-check': typeof TalentCheckRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/history': typeof HistoryRoute
+  '/jd-analytics': typeof JdAnalyticsRoute
+  '/profile': typeof ProfileRoute
+  '/resume-parsing': typeof ResumeParsingRoute
+  '/skill-matching': typeof SkillMatchingRoute
+  '/talent-check': typeof TalentCheckRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/history': typeof HistoryRoute
+  '/jd-analytics': typeof JdAnalyticsRoute
+  '/profile': typeof ProfileRoute
+  '/resume-parsing': typeof ResumeParsingRoute
+  '/skill-matching': typeof SkillMatchingRoute
+  '/talent-check': typeof TalentCheckRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/history'
+    | '/jd-analytics'
+    | '/profile'
+    | '/resume-parsing'
+    | '/skill-matching'
+    | '/talent-check'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/history'
+    | '/jd-analytics'
+    | '/profile'
+    | '/resume-parsing'
+    | '/skill-matching'
+    | '/talent-check'
+  id:
+    | '__root__'
+    | '/'
+    | '/history'
+    | '/jd-analytics'
+    | '/profile'
+    | '/resume-parsing'
+    | '/skill-matching'
+    | '/talent-check'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HistoryRoute: typeof HistoryRoute
+  JdAnalyticsRoute: typeof JdAnalyticsRoute
+  ProfileRoute: typeof ProfileRoute
+  ResumeParsingRoute: typeof ResumeParsingRoute
+  SkillMatchingRoute: typeof SkillMatchingRoute
+  TalentCheckRoute: typeof TalentCheckRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jd-analytics': {
+      id: '/jd-analytics'
+      path: '/jd-analytics'
+      fullPath: '/jd-analytics'
+      preLoaderRoute: typeof JdAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resume-parsing': {
+      id: '/resume-parsing'
+      path: '/resume-parsing'
+      fullPath: '/resume-parsing'
+      preLoaderRoute: typeof ResumeParsingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/skill-matching': {
+      id: '/skill-matching'
+      path: '/skill-matching'
+      fullPath: '/skill-matching'
+      preLoaderRoute: typeof SkillMatchingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/talent-check': {
+      id: '/talent-check'
+      path: '/talent-check'
+      fullPath: '/talent-check'
+      preLoaderRoute: typeof TalentCheckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HistoryRoute: HistoryRoute,
+  JdAnalyticsRoute: JdAnalyticsRoute,
+  ProfileRoute: ProfileRoute,
+  ResumeParsingRoute: ResumeParsingRoute,
+  SkillMatchingRoute: SkillMatchingRoute,
+  TalentCheckRoute: TalentCheckRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
