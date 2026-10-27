@@ -10,12 +10,12 @@ export const emptyProfile = (): CandidateProfile => ({
 });
 
 export function loadProfile(): CandidateProfile {
-  if (typeof window === "undefined") return SAMPLE_CANDIDATES[0].profile;
+  if (typeof window === "undefined") return SAMPLE_CANDIDATES[0]!.profile;
   try {
     const raw = window.localStorage.getItem(KEY);
-    return raw ? (JSON.parse(raw) as CandidateProfile) : SAMPLE_CANDIDATES[0].profile;
+    return raw ? (JSON.parse(raw) as CandidateProfile) : SAMPLE_CANDIDATES[0]!.profile;
   } catch {
-    return SAMPLE_CANDIDATES[0].profile;
+    return SAMPLE_CANDIDATES[0]!.profile;
   }
 }
 

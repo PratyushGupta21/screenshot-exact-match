@@ -97,7 +97,7 @@ function ProfileBuilder() {
   const prefill = () => {
     const r = SAMPLE_PARSED_RESUME;
     setP((x) => ({
-      ...x, name: r.personal.name, email: r.personal.email, education: r.education[0],
+      ...x, name: r.personal.name, email: r.personal.email, education: r.education[0] ?? x.education,
       skills: r.extracted.skills, internships: r.internships, certifications: r.certifications,
       cv_file: r.extracted.source_file,
     }));

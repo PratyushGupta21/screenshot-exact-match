@@ -36,7 +36,7 @@ export async function parseResume(file: File): Promise<ParsedResume> {
 
 /** Synchronous demo calculation (used by history + dashboard to stay consistent). */
 export function talentCheckSync(candidateId: string, company: string): TalentCheckResult {
-  return computeTalentCheck(company, SAMPLE_COMPANY_REQUIREMENTS[company], getCandidate(candidateId).levels);
+  return computeTalentCheck(company, SAMPLE_COMPANY_REQUIREMENTS[company]!, getCandidate(candidateId).levels);
 }
 
 export function skillMatchSync(candidateId: string, jobId: string): SkillMatchingResult {

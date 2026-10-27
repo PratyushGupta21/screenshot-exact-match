@@ -151,7 +151,7 @@ export const SAMPLE_PARSED_RESUME: ParsedResume = {
     source_file: "aarav_sharma_cv.pdf",
     company: "",
     role: "",
-    skills: SAMPLE_CANDIDATES[0].profile.skills,
+    skills: SAMPLE_CANDIDATES[0]!.profile.skills,
   },
 };
 
