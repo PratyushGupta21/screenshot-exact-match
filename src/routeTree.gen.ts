@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as JdAnalyticsRouteImport } from './routes/jd-analytics'
+import { Route as ResumeParsingRouteImport } from './routes/resume-parsing'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JdAnalyticsRoute = JdAnalyticsRouteImport.update({
+  id: '/jd-analytics',
+  path: '/jd-analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResumeParsingRoute = ResumeParsingRouteImport.update({
+  id: '/resume-parsing',
+  path: '/resume-parsing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/jd-analytics': typeof JdAnalyticsRoute
+  '/resume-parsing': typeof ResumeParsingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/jd-analytics': typeof JdAnalyticsRoute
+  '/resume-parsing': typeof ResumeParsingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/jd-analytics': typeof JdAnalyticsRoute
+  '/resume-parsing': typeof ResumeParsingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/jd-analytics' | '/resume-parsing'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/jd-analytics' | '/resume-parsing'
+  id: '__root__' | '/' | '/jd-analytics' | '/resume-parsing'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  JdAnalyticsRoute: typeof JdAnalyticsRoute
+  ResumeParsingRoute: typeof ResumeParsingRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/jd-analytics': {
+      id: '/jd-analytics'
+      path: '/jd-analytics'
+      fullPath: '/jd-analytics'
+      preLoaderRoute: typeof JdAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resume-parsing': {
+      id: '/resume-parsing'
+      path: '/resume-parsing'
+      fullPath: '/resume-parsing'
+      preLoaderRoute: typeof ResumeParsingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  JdAnalyticsRoute: JdAnalyticsRoute,
+  ResumeParsingRoute: ResumeParsingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

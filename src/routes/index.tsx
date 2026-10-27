@@ -88,9 +88,9 @@ function Dashboard() {
       </div>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-3">
-        <StatCard label="Skills on profile" value={candidate.profile.skills.length} hint="From parsed CV & manual edits" icon={Sparkles} />
-        <StatCard label="Categories meeting bar" value={`${tc.skillset_gap.filter((g) => !g.gap).length}/12`} hint="Google LLC · sample levels" icon={Target} />
-        <StatCard label="Matched JD skills" value={`${sm.matched_skills.length}/${sm.matched_skills.length + sm.missing_skills.length}`} hint="Google SWE · sample JD" icon={GitCompareArrows} />
+        <StatCard label="Skills on profile" value={candidate.profile.skills.length} hint="From parsed CV & manual edits" icon={<Sparkles className="size-4" />} />
+        <StatCard label="Categories meeting bar" value={`${tc.skillset_gap.filter((g) => !g.gap).length}/12`} hint="Google LLC · sample levels" icon={<Target className="size-4" />} />
+        <StatCard label="Matched JD skills" value={`${sm.matched_skills.length}/${sm.matched_skills.length + sm.missing_skills.length}`} hint="Google SWE · sample JD" icon={<GitCompareArrows className="size-4" />} />
       </div>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
