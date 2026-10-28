@@ -78,10 +78,14 @@ const PRINCIPLES = [
 export function GlassHero({ tcResult, smResult, targetJobRole }: GlassHeroProps) {
   const [showSecondView, setShowSecondView] = useState(false);
   const [entered, setEntered] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const installRef = useRef<HTMLDivElement>(null);
   const triggerButtonRef = useRef<HTMLButtonElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const tiltX = useRef(0);
   const tiltY = useRef(0);
@@ -95,6 +99,55 @@ export function GlassHero({ tcResult, smResult, targetJobRole }: GlassHeroProps)
     const t = setTimeout(() => setEntered(true), 40);
     return () => clearTimeout(t);
   }, []);
+
+  /* Check reduced motion & listen for changes */
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches);
+    };
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
+
+  /* Handlers for video readiness and fallback */
+  const handleVideoReady = useCallback(() => {
+    setVideoReady(true);
+  }, []);
+
+  const handleVideoError = useCallback(() => {
+    setVideoFailed(true);
+  }, []);
+
+  /* Play/pause video in sync with prefers-reduced-motion */
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+
+    if (video.readyState >= 2) {
+      setVideoReady(true);
+    }
+
+    if (prefersReducedMotion) {
+      video.pause();
+    } else {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setVideoReady(true);
+          })
+          .catch(() => {
+            // Autoplay restricted by browser policy; static frame remains visible
+          });
+      }
+    }
+  }, [prefersReducedMotion]);
 
   /* Escape key to close second view */
   useEffect(() => {
@@ -195,12 +248,56 @@ export function GlassHero({ tcResult, smResult, targetJobRole }: GlassHeroProps)
   return (
     <div
       ref={containerRef}
-      className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden py-10 sm:py-14 lg:py-16 selection:bg-champagne/20 bg-obsidian"
+      className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-start lg:justify-center items-center overflow-hidden py-8 sm:py-12 lg:py-16 selection:bg-champagne/20 bg-obsidian"
     >
+      {/* ── Layer 1: Page background is bg-obsidian (#050507) ── */}
+
+      {/* ── Layer 2: Background Video ── */}
+      {!videoFailed && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+        >
+          <video
+            ref={videoRef}
+            autoPlay={!prefersReducedMotion}
+            muted
+            loop
+            playsInline
+            preload="auto"
+            src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/aaaf/facet-glass-hero.mp4"
+            onCanPlay={handleVideoReady}
+            onPlaying={handleVideoReady}
+            onLoadedData={handleVideoReady}
+            onLoadedMetadata={handleVideoReady}
+            onError={handleVideoError}
+            className="w-full h-full object-cover object-center pointer-events-none"
+            style={{
+              opacity: 0.78,
+            }}
+          >
+            <source
+              src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/aaaf/facet-glass-hero.mp4"
+              type="video/mp4"
+            />
+          </video>
+        </div>
+      )}
+
+      {/* ── Layer 3: Subtle Dark Gradient Overlay for Readability ── */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(5,5,7,0.7) 0%, rgba(5,5,7,0.25) 25%, rgba(5,5,7,0.3) 70%, rgba(5,5,7,0.85) 100%)",
+        }}
+      />
+
       {/* ── Ambient Studio Lighting Layers ── */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 left-1/4 size-[650px] rounded-full opacity-25"
+        className="pointer-events-none absolute -top-40 left-1/4 size-[650px] rounded-full opacity-20 z-0"
         style={{
           background:
             "radial-gradient(circle, rgba(201,205,208,0.12) 0%, rgba(201,205,208,0.02) 50%, transparent 70%)",
@@ -208,7 +305,7 @@ export function GlassHero({ tcResult, smResult, targetJobRole }: GlassHeroProps)
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-32 right-1/4 size-[600px] rounded-full opacity-20"
+        className="pointer-events-none absolute -bottom-32 right-1/4 size-[600px] rounded-full opacity-15 z-0"
         style={{
           background:
             "radial-gradient(circle, rgba(196,165,116,0.12) 0%, rgba(196,165,116,0.02) 55%, transparent 75%)",
@@ -313,7 +410,7 @@ export function GlassHero({ tcResult, smResult, targetJobRole }: GlassHeroProps)
 
       {/* ── Main Two-Column Hero Composition ── */}
       <div
-        className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-opacity duration-300 ${
+        className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-opacity duration-300 relative z-10 ${
           showSecondView ? "opacity-0 pointer-events-none" : "opacity-100"
         }`}
       >
@@ -331,7 +428,7 @@ export function GlassHero({ tcResult, smResult, targetJobRole }: GlassHeroProps)
               className="w-full lg:w-[56%] rounded-2xl sm:rounded-3xl border border-white/10 p-6 sm:p-8 lg:p-10 shadow-[0_16px_40px_-8px_rgba(0,0,0,0.5)] flex flex-col justify-between relative overflow-hidden backdrop-blur-xl"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(23, 23, 27, 0.94) 0%, rgba(20, 20, 24, 0.98) 100%)",
+                  "linear-gradient(135deg, rgba(23, 23, 27, 0.72) 0%, rgba(20, 20, 24, 0.78) 100%)",
               }}
             >
               {/* Top bevel highlight */}
@@ -416,7 +513,7 @@ export function GlassHero({ tcResult, smResult, targetJobRole }: GlassHeroProps)
                 className="rounded-2xl sm:rounded-3xl border border-white/10 p-6 sm:p-7 shadow-[0_16px_40px_-8px_rgba(0,0,0,0.5)] relative overflow-hidden flex flex-col items-center justify-center text-center space-y-4 backdrop-blur-xl"
                 style={{
                   background:
-                    "linear-gradient(135deg, rgba(23, 23, 27, 0.94) 0%, rgba(20, 20, 24, 0.98) 100%)",
+                    "linear-gradient(135deg, rgba(23, 23, 27, 0.72) 0%, rgba(20, 20, 24, 0.78) 100%)",
                 }}
               >
                 {/* Top bevel highlight */}
@@ -460,7 +557,7 @@ export function GlassHero({ tcResult, smResult, targetJobRole }: GlassHeroProps)
                 className="rounded-2xl sm:rounded-3xl border border-white/10 p-6 sm:p-7 shadow-[0_16px_40px_-8px_rgba(0,0,0,0.5)] relative overflow-hidden flex flex-col justify-between space-y-4 backdrop-blur-xl"
                 style={{
                   background:
-                    "linear-gradient(135deg, rgba(23, 23, 27, 0.94) 0%, rgba(20, 20, 24, 0.98) 100%)",
+                    "linear-gradient(135deg, rgba(23, 23, 27, 0.72) 0%, rgba(20, 20, 24, 0.78) 100%)",
                 }}
               >
                 {/* Top bevel highlight */}
