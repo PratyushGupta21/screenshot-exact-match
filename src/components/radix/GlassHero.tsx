@@ -219,13 +219,14 @@ export function GlassHero({ tcResult, smResult, targetJobRole }: GlassHeroProps)
       {/* ── Layer 2: AXON Particle-Cloud WebGL Background ── */}
       <ParticleCloudBackground />
 
-      {/* ── Layer 3: Soft Edge Transition & Text Readability Overlay ── */}
+      {/* ── Layer 3: Minimal edge vignette — keep nav/footer readable without
+           obscuring the particle field behind the glass panels ── */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 12%, transparent 88%, rgba(0,0,0,0.7) 100%), radial-gradient(circle at 22% 50%, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 55%, transparent 80%)",
+            "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, transparent 8%, transparent 92%, rgba(0,0,0,0.5) 100%)",
         }}
       />
 
@@ -342,10 +343,10 @@ export function GlassHero({ tcResult, smResult, targetJobRole }: GlassHeroProps)
           <div className="flex flex-col lg:flex-row items-stretch gap-6 lg:gap-8">
             {/* ── LEFT COLUMN: Headline, Story, CTAs, Highlights (~56%) ── */}
             <div
-              className="w-full lg:w-[56%] rounded-2xl sm:rounded-3xl border border-white/[0.12] p-6 sm:p-8 lg:p-10 shadow-[0_16px_40px_-8px_rgba(0,0,0,0.35)] flex flex-col justify-between relative overflow-hidden backdrop-blur-md"
+              className="w-full lg:w-[56%] rounded-2xl sm:rounded-3xl border border-white/[0.12] p-6 sm:p-8 lg:p-10 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.3)] flex flex-col justify-between relative overflow-hidden backdrop-blur-[10px]"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(23, 23, 27, 0.38) 0%, rgba(20, 20, 24, 0.45) 100%)",
+                  "linear-gradient(135deg, rgba(20, 20, 24, 0.20) 0%, rgba(18, 18, 22, 0.28) 100%)",
               }}
             >
               {/* Top bevel highlight */}
@@ -427,10 +428,10 @@ export function GlassHero({ tcResult, smResult, targetJobRole }: GlassHeroProps)
             <div className="w-full lg:w-[44%] flex flex-col gap-6">
               {/* 1. Readiness Index Panel */}
               <div
-                className="rounded-2xl sm:rounded-3xl border border-white/[0.12] p-6 sm:p-7 shadow-[0_16px_40px_-8px_rgba(0,0,0,0.35)] relative overflow-hidden flex flex-col items-center justify-center text-center space-y-4 backdrop-blur-md"
+                className="rounded-2xl sm:rounded-3xl border border-white/[0.12] p-6 sm:p-7 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.3)] relative overflow-hidden flex flex-col items-center justify-center text-center space-y-4 backdrop-blur-[10px]"
                 style={{
                   background:
-                    "linear-gradient(135deg, rgba(23, 23, 27, 0.38) 0%, rgba(20, 20, 24, 0.45) 100%)",
+                    "linear-gradient(135deg, rgba(20, 20, 24, 0.22) 0%, rgba(18, 18, 22, 0.30) 100%)",
                 }}
               >
                 {/* Top bevel highlight */}
@@ -471,10 +472,10 @@ export function GlassHero({ tcResult, smResult, targetJobRole }: GlassHeroProps)
 
               {/* 2. Skill Dimensions Panel (All 12 Categories in Responsive Grid) */}
               <div
-                className="rounded-2xl sm:rounded-3xl border border-white/[0.12] p-6 sm:p-7 shadow-[0_16px_40px_-8px_rgba(0,0,0,0.35)] relative overflow-hidden flex flex-col justify-between space-y-4 backdrop-blur-md"
+                className="rounded-2xl sm:rounded-3xl border border-white/[0.12] p-6 sm:p-7 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.3)] relative overflow-hidden flex flex-col justify-between space-y-4 backdrop-blur-[10px]"
                 style={{
                   background:
-                    "linear-gradient(135deg, rgba(23, 23, 27, 0.38) 0%, rgba(20, 20, 24, 0.45) 100%)",
+                    "linear-gradient(135deg, rgba(20, 20, 24, 0.22) 0%, rgba(18, 18, 22, 0.30) 100%)",
                 }}
               >
                 {/* Top bevel highlight */}

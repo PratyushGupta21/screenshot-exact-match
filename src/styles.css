@@ -71,6 +71,8 @@
   --color-slate-grey: #85858E;
   --color-frost-white: #F4F4F5;
   --color-success-green: #36D67E;
+  --color-danger-red: #E05252;
+  --color-danger-red-soft: rgba(224, 82, 82, 0.1);
   --color-glass-edge: rgba(201, 205, 208, 0.25);
   --color-glass-edge-bright: rgba(220, 220, 224, 0.5);
 

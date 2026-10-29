@@ -10,17 +10,32 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AtsIntegrityRouteImport } from './routes/ats-integrity'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as DeveloperProfilesRouteImport } from './routes/developer-profiles'
 import { Route as HistoryRouteImport } from './routes/history'
+import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as JdAnalyticsRouteImport } from './routes/jd-analytics'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ProvenanceRouteImport } from './routes/provenance'
 import { Route as ResumeParsingRouteImport } from './routes/resume-parsing'
+import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as SkillMatchingRouteImport } from './routes/skill-matching'
 import { Route as TalentCheckRouteImport } from './routes/talent-check'
+import { Route as MeIndexRouteImport } from './routes/me/index'
+import { Route as MeAnalysesRouteImport } from './routes/me/analyses'
+import { Route as MeApplicationsRouteImport } from './routes/me/applications'
+import { Route as MeResumesRouteImport } from './routes/me/resumes'
+import { Route as MeSettingsRouteImport } from './routes/me/settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AtsIntegrityRoute = AtsIntegrityRouteImport.update({
+  id: '/ats-integrity',
+  path: '/ats-integrity',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -28,9 +43,19 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DeveloperProfilesRoute = DeveloperProfilesRouteImport.update({
+  id: '/developer-profiles',
+  path: '/developer-profiles',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InsightsRoute = InsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JdAnalyticsRoute = JdAnalyticsRouteImport.update({
@@ -43,9 +68,19 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProvenanceRoute = ProvenanceRouteImport.update({
+  id: '/provenance',
+  path: '/provenance',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResumeParsingRoute = ResumeParsingRouteImport.update({
   id: '/resume-parsing',
   path: '/resume-parsing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoadmapRoute = RoadmapRouteImport.update({
+  id: '/roadmap',
+  path: '/roadmap',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SkillMatchingRoute = SkillMatchingRouteImport.update({
@@ -58,80 +93,175 @@ const TalentCheckRoute = TalentCheckRouteImport.update({
   path: '/talent-check',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MeIndexRoute = MeIndexRouteImport.update({
+  id: '/me/',
+  path: '/me/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeAnalysesRoute = MeAnalysesRouteImport.update({
+  id: '/me/analyses',
+  path: '/me/analyses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeApplicationsRoute = MeApplicationsRouteImport.update({
+  id: '/me/applications',
+  path: '/me/applications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeResumesRoute = MeResumesRouteImport.update({
+  id: '/me/resumes',
+  path: '/me/resumes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeSettingsRoute = MeSettingsRouteImport.update({
+  id: '/me/settings',
+  path: '/me/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ats-integrity': typeof AtsIntegrityRoute
   '/dashboard': typeof DashboardRoute
+  '/developer-profiles': typeof DeveloperProfilesRoute
   '/history': typeof HistoryRoute
+  '/insights': typeof InsightsRoute
   '/jd-analytics': typeof JdAnalyticsRoute
   '/profile': typeof ProfileRoute
+  '/provenance': typeof ProvenanceRoute
   '/resume-parsing': typeof ResumeParsingRoute
+  '/roadmap': typeof RoadmapRoute
   '/skill-matching': typeof SkillMatchingRoute
   '/talent-check': typeof TalentCheckRoute
+  '/me/analyses': typeof MeAnalysesRoute
+  '/me/applications': typeof MeApplicationsRoute
+  '/me/resumes': typeof MeResumesRoute
+  '/me/settings': typeof MeSettingsRoute
+  '/me/': typeof MeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ats-integrity': typeof AtsIntegrityRoute
   '/dashboard': typeof DashboardRoute
+  '/developer-profiles': typeof DeveloperProfilesRoute
   '/history': typeof HistoryRoute
+  '/insights': typeof InsightsRoute
   '/jd-analytics': typeof JdAnalyticsRoute
   '/profile': typeof ProfileRoute
+  '/provenance': typeof ProvenanceRoute
   '/resume-parsing': typeof ResumeParsingRoute
+  '/roadmap': typeof RoadmapRoute
   '/skill-matching': typeof SkillMatchingRoute
   '/talent-check': typeof TalentCheckRoute
+  '/me/analyses': typeof MeAnalysesRoute
+  '/me/applications': typeof MeApplicationsRoute
+  '/me/resumes': typeof MeResumesRoute
+  '/me/settings': typeof MeSettingsRoute
+  '/me': typeof MeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ats-integrity': typeof AtsIntegrityRoute
   '/dashboard': typeof DashboardRoute
+  '/developer-profiles': typeof DeveloperProfilesRoute
   '/history': typeof HistoryRoute
+  '/insights': typeof InsightsRoute
   '/jd-analytics': typeof JdAnalyticsRoute
   '/profile': typeof ProfileRoute
+  '/provenance': typeof ProvenanceRoute
   '/resume-parsing': typeof ResumeParsingRoute
+  '/roadmap': typeof RoadmapRoute
   '/skill-matching': typeof SkillMatchingRoute
   '/talent-check': typeof TalentCheckRoute
+  '/me/analyses': typeof MeAnalysesRoute
+  '/me/applications': typeof MeApplicationsRoute
+  '/me/resumes': typeof MeResumesRoute
+  '/me/settings': typeof MeSettingsRoute
+  '/me/': typeof MeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ats-integrity'
     | '/dashboard'
+    | '/developer-profiles'
     | '/history'
+    | '/insights'
     | '/jd-analytics'
     | '/profile'
+    | '/provenance'
     | '/resume-parsing'
+    | '/roadmap'
     | '/skill-matching'
     | '/talent-check'
+    | '/me/analyses'
+    | '/me/applications'
+    | '/me/resumes'
+    | '/me/settings'
+    | '/me/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ats-integrity'
     | '/dashboard'
+    | '/developer-profiles'
     | '/history'
+    | '/insights'
     | '/jd-analytics'
     | '/profile'
+    | '/provenance'
     | '/resume-parsing'
+    | '/roadmap'
     | '/skill-matching'
     | '/talent-check'
+    | '/me/analyses'
+    | '/me/applications'
+    | '/me/resumes'
+    | '/me/settings'
+    | '/me'
   id:
     | '__root__'
     | '/'
+    | '/ats-integrity'
     | '/dashboard'
+    | '/developer-profiles'
     | '/history'
+    | '/insights'
     | '/jd-analytics'
     | '/profile'
+    | '/provenance'
     | '/resume-parsing'
+    | '/roadmap'
     | '/skill-matching'
     | '/talent-check'
+    | '/me/analyses'
+    | '/me/applications'
+    | '/me/resumes'
+    | '/me/settings'
+    | '/me/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AtsIntegrityRoute: typeof AtsIntegrityRoute
   DashboardRoute: typeof DashboardRoute
+  DeveloperProfilesRoute: typeof DeveloperProfilesRoute
   HistoryRoute: typeof HistoryRoute
+  InsightsRoute: typeof InsightsRoute
   JdAnalyticsRoute: typeof JdAnalyticsRoute
   ProfileRoute: typeof ProfileRoute
+  ProvenanceRoute: typeof ProvenanceRoute
   ResumeParsingRoute: typeof ResumeParsingRoute
+  RoadmapRoute: typeof RoadmapRoute
   SkillMatchingRoute: typeof SkillMatchingRoute
   TalentCheckRoute: typeof TalentCheckRoute
+  MeAnalysesRoute: typeof MeAnalysesRoute
+  MeApplicationsRoute: typeof MeApplicationsRoute
+  MeResumesRoute: typeof MeResumesRoute
+  MeSettingsRoute: typeof MeSettingsRoute
+  MeIndexRoute: typeof MeIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -143,6 +273,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ats-integrity': {
+      id: '/ats-integrity'
+      path: '/ats-integrity'
+      fullPath: '/ats-integrity'
+      preLoaderRoute: typeof AtsIntegrityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -150,11 +287,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/developer-profiles': {
+      id: '/developer-profiles'
+      path: '/developer-profiles'
+      fullPath: '/developer-profiles'
+      preLoaderRoute: typeof DeveloperProfilesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/history': {
       id: '/history'
       path: '/history'
       fullPath: '/history'
       preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/insights': {
+      id: '/insights'
+      path: '/insights'
+      fullPath: '/insights'
+      preLoaderRoute: typeof InsightsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jd-analytics': {
@@ -171,11 +322,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/provenance': {
+      id: '/provenance'
+      path: '/provenance'
+      fullPath: '/provenance'
+      preLoaderRoute: typeof ProvenanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/resume-parsing': {
       id: '/resume-parsing'
       path: '/resume-parsing'
       fullPath: '/resume-parsing'
       preLoaderRoute: typeof ResumeParsingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/roadmap': {
+      id: '/roadmap'
+      path: '/roadmap'
+      fullPath: '/roadmap'
+      preLoaderRoute: typeof RoadmapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/skill-matching': {
@@ -192,18 +357,63 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TalentCheckRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/me/': {
+      id: '/me/'
+      path: '/me'
+      fullPath: '/me/'
+      preLoaderRoute: typeof MeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/me/analyses': {
+      id: '/me/analyses'
+      path: '/me/analyses'
+      fullPath: '/me/analyses'
+      preLoaderRoute: typeof MeAnalysesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/me/applications': {
+      id: '/me/applications'
+      path: '/me/applications'
+      fullPath: '/me/applications'
+      preLoaderRoute: typeof MeApplicationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/me/resumes': {
+      id: '/me/resumes'
+      path: '/me/resumes'
+      fullPath: '/me/resumes'
+      preLoaderRoute: typeof MeResumesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/me/settings': {
+      id: '/me/settings'
+      path: '/me/settings'
+      fullPath: '/me/settings'
+      preLoaderRoute: typeof MeSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AtsIntegrityRoute: AtsIntegrityRoute,
   DashboardRoute: DashboardRoute,
+  DeveloperProfilesRoute: DeveloperProfilesRoute,
   HistoryRoute: HistoryRoute,
+  InsightsRoute: InsightsRoute,
   JdAnalyticsRoute: JdAnalyticsRoute,
   ProfileRoute: ProfileRoute,
+  ProvenanceRoute: ProvenanceRoute,
   ResumeParsingRoute: ResumeParsingRoute,
+  RoadmapRoute: RoadmapRoute,
   SkillMatchingRoute: SkillMatchingRoute,
   TalentCheckRoute: TalentCheckRoute,
+  MeAnalysesRoute: MeAnalysesRoute,
+  MeApplicationsRoute: MeApplicationsRoute,
+  MeResumesRoute: MeResumesRoute,
+  MeSettingsRoute: MeSettingsRoute,
+  MeIndexRoute: MeIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

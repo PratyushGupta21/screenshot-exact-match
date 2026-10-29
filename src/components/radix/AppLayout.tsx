@@ -1,13 +1,23 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Bell,
+  Briefcase,
+  Code2,
+  Compass,
+  FileCheck2,
   FileSearch,
   FileText,
+  FolderOpen,
   GitCompareArrows,
+  Github,
   History,
   LayoutDashboard,
   Menu,
   Radar,
+  Settings,
+  ShieldAlert,
+  Target,
+  UserCheck,
   UserRound,
   X,
   CheckCircle2,
@@ -17,23 +27,79 @@ import { CairnMark } from "@/components/radix/CairnMark";
 import { AppFooter } from "@/components/radix/Footers";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import type { LucideIcon } from "lucide-react";
 import { loadHistory, subscribeHistory } from "@/services/history-store";
 import { loadProfile, subscribeProfile } from "@/services/profile-store";
 
-export const NAV = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/jd-analytics", label: "JD Analytics", icon: FileSearch },
-  { to: "/resume-parsing", label: "Resume Parsing", icon: FileText },
-  { to: "/profile", label: "Profile Builder", icon: UserRound },
-  { to: "/talent-check", label: "Talent Check", icon: Radar },
-  { to: "/skill-matching", label: "Skill Matching", icon: GitCompareArrows },
-  { to: "/history", label: "Analysis History", icon: History },
-] as const;
+export type ValidAppRoute =
+  | "/dashboard"
+  | "/ats-integrity"
+  | "/provenance"
+  | "/developer-profiles"
+  | "/roadmap"
+  | "/insights"
+  | "/talent-check"
+  | "/skill-matching"
+  | "/resume-parsing"
+  | "/jd-analytics"
+  | "/profile"
+  | "/me"
+  | "/me/resumes"
+  | "/me/analyses"
+  | "/me/applications"
+  | "/me/settings";
+
+export interface NavItem {
+  readonly to: ValidAppRoute;
+  readonly label: string;
+  readonly icon: LucideIcon;
+}
+
+export interface NavSection {
+  readonly title: string;
+  readonly items: readonly NavItem[];
+}
+
+export const NAV_SECTIONS: readonly NavSection[] = [
+  {
+    title: "Core Intelligence",
+    items: [
+      { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { to: "/ats-integrity", label: "ATS Integrity", icon: ShieldAlert },
+      { to: "/provenance", label: "Git Provenance", icon: Github },
+      { to: "/developer-profiles", label: "Developer Profiles", icon: Code2 },
+      { to: "/roadmap", label: "Learning Roadmap", icon: Compass },
+      { to: "/insights", label: "Benchmark Insights", icon: Target },
+    ],
+  },
+  {
+    title: "Evaluation Tools",
+    items: [
+      { to: "/talent-check", label: "Talent Check", icon: Radar },
+      { to: "/skill-matching", label: "Skill Matching", icon: GitCompareArrows },
+      { to: "/resume-parsing", label: "Resume Parsing", icon: FileText },
+      { to: "/jd-analytics", label: "JD Analytics", icon: FileSearch },
+      { to: "/profile", label: "Profile Builder", icon: UserRound },
+    ],
+  },
+  {
+    title: "Candidate Hub",
+    items: [
+      { to: "/me", label: "Candidate Workspace", icon: UserCheck },
+      { to: "/me/resumes", label: "Resume Vault", icon: FolderOpen },
+      { to: "/me/analyses", label: "Analysis History", icon: History },
+      { to: "/me/applications", label: "Application Pipeline", icon: Briefcase },
+      { to: "/me/settings", label: "Settings & Export", icon: Settings },
+    ],
+  },
+];
+
+export const NAV: readonly NavItem[] = NAV_SECTIONS.flatMap((s) => s.items);
 
 /* ─── Logo ─── */
 function Logo() {
   return (
-    <Link to="/" className="flex items-center gap-3 group" title="Return to Public Landing Page">
+    <Link to="/" className="flex items-center gap-3 group shrink-0" title="Return to Public Landing Page">
       <CairnMark className="size-9" />
       <span className="leading-tight">
         <span
@@ -53,56 +119,70 @@ function Logo() {
   );
 }
 
-/* ─── Nav list ─── */
+/* ─── Nav list with grouped sections ─── */
 function NavList({ onNavigate }: { onNavigate?: (() => void) | undefined }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <nav className="mt-8 space-y-1" aria-label="Main Navigation">
-      {NAV.map(({ to, label, icon: Icon }) => {
-        const active = path === to || (to !== "/dashboard" && path.startsWith(to));
+    <nav className="mt-6 flex-1 space-y-6 overflow-y-auto pr-1" aria-label="Main Navigation">
+      {NAV_SECTIONS.map((section) => (
+        <div key={section.title} className="space-y-1">
+          <p className="px-3 text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-slate-grey/70">
+            {section.title}
+          </p>
+          <div className="space-y-0.5 pt-1">
+            {section.items.map(({ to, label, icon: Icon }) => {
+              const active =
+                to === "/dashboard"
+                  ? path === "/dashboard"
+                  : to === "/me"
+                    ? path === "/me" || path === "/me/"
+                    : path.startsWith(to);
 
-        return (
-          <Link
-            key={to}
-            to={to}
-            onClick={onNavigate}
-            className={cn(
-              "group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wider transition-all duration-150 relative",
-            )}
-            style={{
-              background: active ? "rgba(201,205,208,0.07)" : "transparent",
-              color: active ? "#DCDCE0" : "#85858E",
-              border: active ? "1px solid rgba(201,205,208,0.15)" : "1px solid transparent",
-            }}
-            onMouseEnter={(e) => {
-              if (!active) {
-                e.currentTarget.style.background = "rgba(201,205,208,0.04)";
-                e.currentTarget.style.color = "#BDBDC3";
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!active) {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "#85858E";
-              }
-            }}
-          >
-            {/* Active indicator */}
-            {active && (
-              <span
-                className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full"
-                style={{ background: "#C4A574" }}
-              />
-            )}
-            <Icon
-              className="size-4 transition-colors"
-              style={{ color: active ? "#C4A574" : "#85858E" }}
-            />
-            {label}
-          </Link>
-        );
-      })}
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  onClick={onNavigate}
+                  className={cn(
+                    "group flex items-center gap-3 rounded-xl px-3 py-2 text-xs font-semibold tracking-wider transition-all duration-150 relative",
+                  )}
+                  style={{
+                    background: active ? "rgba(201,205,208,0.08)" : "transparent",
+                    color: active ? "#DCDCE0" : "#85858E",
+                    border: active ? "1px solid rgba(201,205,208,0.15)" : "1px solid transparent",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.background = "rgba(201,205,208,0.04)";
+                      e.currentTarget.style.color = "#BDBDC3";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.background = "transparent";
+                      e.currentTarget.style.color = "#85858E";
+                    }
+                  }}
+                >
+                  {/* Active indicator */}
+                  {active && (
+                    <span
+                      className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full"
+                      style={{ background: "#C4A574" }}
+                    />
+                  )}
+                  <Icon
+                    className="size-3.5 transition-colors shrink-0"
+                    style={{ color: active ? "#C4A574" : "#85858E" }}
+                  />
+                  <span className="truncate">{label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      ))}
     </nav>
   );
 }
@@ -163,9 +243,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const [initials, setInitials] = useState("CP");
   const [recentRuns, setRecentRuns] = useState(() => loadHistory().slice(0, 3));
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const current = NAV.find((n) =>
-    n.to === "/dashboard" ? path === "/dashboard" : path.startsWith(n.to),
-  );
+  const current: NavItem | undefined = [...NAV]
+    .sort((a, b) => b.to.length - a.to.length)
+    .find((n) => (n.to === "/dashboard" ? path === "/dashboard" : path.startsWith(n.to)));
 
   useEffect(() => {
     const update = () => {
